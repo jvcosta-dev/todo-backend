@@ -31,3 +31,5 @@ mongoose.connect(MONGO_URI).then((database: mongoose.Mongoose) => {
 app.listen(PORT, () => {
   console.log("running on:", PORT);
 });
+
+export default app;
