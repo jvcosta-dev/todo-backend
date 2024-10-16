@@ -37,7 +37,7 @@ router.post("/login", loginUser);
 
 router.post("/task", authMiddleware, createTask);
 router.get("/task/:userId/:taskId", authMiddleware, getTaskById);
-router.patch("/task/:taskId", authMiddleware, editTask);
+router.patch("/task/:userId/:taskId", authMiddleware, editTask);
 router.get("/task/mytasks", authMiddleware, getUserTasks);
 
 router.put("/workspace/join/:userId", authMiddleware, joinWorkspace);

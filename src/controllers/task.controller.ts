@@ -96,6 +96,10 @@ const editTask = async (req: Request, res: Response) => {
     const task = user.workspace?.tasks.find((t) => t._id.toString() === taskId);
     if (!task) return sendErrorResponse(res, 404, "Task not found");
 
+    if (!title && !description && !tag && !initialDate && !endDate) {
+      return sendErrorResponse(res, 400, "No data provided");
+    }
+
     if (title) task.title = title;
     if (description) task.description = description;
     if (tag) task.tag = tag;
