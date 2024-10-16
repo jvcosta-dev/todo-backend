@@ -5,12 +5,12 @@ import { doesUserExist } from "../validations/user.validation";
 import { isValidObjectId } from "mongoose";
 
 const createTask = async (req: Request, res: Response) => {
-  const { userId, title, description, tag, initialDate, endDate } = req.body;
+  const { title, description, tag, initialDate, endDate } = req.body;
 
-  const user = await doesUserExist(userId);
+  const user = await doesUserExist(req.userId);
 
   if (!user) {
-    res.status(400).end("user not found with provided user id");
+    res.sendStatus(404);
     return;
   }
 
@@ -60,6 +60,12 @@ const getTaskById = async (req: Request, res: Response) => {
   }
 
   try {
+    const isOwner = req.userId === userId;
+    const hasAccess = user.workspace.members.find((m) => m._id === req.userId);
+    if (!hasAccess || !isOwner) {
+      res.sendStatus(401);
+      return;
+    }
     const task = user.workspace?.tasks.find((t) => t._id.toString() === taskId);
     if (!task) {
       res.sendStatus(404);
@@ -72,4 +78,18 @@ const getTaskById = async (req: Request, res: Response) => {
   }
 };
 
-export { createTask, getTaskById };
+const getUserTasks = async (req: Request, res: Response) => {
+  try {
+    const user = await doesUserExist(req.userId);
+    if (!user) {
+      res.sendStatus(404);
+      return;
+    }
+    const tasks = user.workspace.tasks;
+    res.status(200).json(tasks);
+  } catch (error) {
+    res.sendStatus(500);
+    console.error(error);
+  }
+};
+export { createTask, getTaskById, getUserTasks };

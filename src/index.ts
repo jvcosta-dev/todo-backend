@@ -1,13 +1,20 @@
 import e from "express";
+import cookieparser from "cookie-parser";
 import cors from "cors";
 import mongoose from "mongoose";
 import { createUser, getUsers, loginUser } from "./controllers/user.controller";
-import { createTask, getTaskById } from "./controllers/task.controller";
+import {
+  createTask,
+  getTaskById,
+  getUserTasks,
+} from "./controllers/task.controller";
+import { authMiddleware } from "./middlewares/auth.middleware";
 const MONGO_URI = process.env.MONGO_URI || "";
 const PORT = process.env.PORT || "";
 
 const app = e();
 app.use(e.json());
+app.use(cookieparser());
 app.use(
   cors({
     origin: ["localhost", "*"],
@@ -19,8 +26,9 @@ const router = e.Router();
 router.get("/users", getUsers);
 router.post("/register", createUser);
 router.post("/login", loginUser);
-router.post("/task", createTask);
-router.get("/task/:userId/:taskId", getTaskById);
+router.post("/task", authMiddleware, createTask);
+router.get("/task/:userId/:taskId", authMiddleware, getTaskById);
+router.get("/mytasks", authMiddleware, getUserTasks);
 
 app.use(router);
 
