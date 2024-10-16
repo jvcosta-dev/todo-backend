@@ -61,8 +61,11 @@ const getTaskById = async (req: Request, res: Response) => {
 
   try {
     const isOwner = req.userId === userId;
-    const hasAccess = user.workspace.members.find((m) => m._id === req.userId);
-    if (!hasAccess || !isOwner) {
+    const hasAccess = user.workspace.members.find(
+      (m) => m.userId === req.userId
+    );
+    console.log(hasAccess);
+    if (!hasAccess && !isOwner) {
       res.sendStatus(401);
       return;
     }
