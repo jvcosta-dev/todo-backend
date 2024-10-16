@@ -73,6 +73,10 @@ const joinWorkspace = async (req: Request, res: Response) => {
       res.sendStatus(404);
       return;
     }
+    if (owner.id === req.userId) {
+      res.sendStatus(400);
+      return;
+    }
     const isMember = owner.workspace.members.find(
       (m) => m.userId === req.userId
     );
@@ -102,6 +106,10 @@ const leaveWorkspace = async (req: Request, res: Response) => {
     const owner = await User.findById(userId);
     if (!owner) {
       res.sendStatus(404);
+      return;
+    }
+    if (owner.id === req.userId) {
+      res.sendStatus(400);
       return;
     }
     const isMember = owner.workspace.members.find(
