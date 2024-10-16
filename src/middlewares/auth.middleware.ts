@@ -1,19 +1,24 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
+interface JWTPayload {
+  userId: string;
+}
+
 const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const token = req.cookies.auth;
   if (!token) {
-    return res.sendStatus(401);
+    res.sendStatus(401);
+    return;
   }
 
-  jwt.verify(token, process.env.JWT_SECRET!, (err: any, userId: any) => {
-    if (err) {
-      return res.sendStatus(403);
-    }
-    req.userId = userId;
-    next();
-  });
+  const { userId } = jwt.verify(token, process.env.JWT_SECRET!) as JWTPayload;
+  if (!userId) {
+    res.sendStatus(401);
+    return;
+  }
+  req.userId = userId;
+  next();
 };
 
 const createToken = (userId: string) => {

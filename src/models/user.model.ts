@@ -1,4 +1,4 @@
-import mongoose, { Model } from "mongoose";
+import mongoose, { Model, mongo } from "mongoose";
 import bcrypt from "bcrypt";
 import { IMember, IUser, IWorkspace } from "../interfaces/user.interface";
 import { ITask } from "../interfaces/task.interface";
@@ -21,7 +21,7 @@ const taskSchema = new mongoose.Schema<ITask>(
 
 const memberSchema = new mongoose.Schema<IMember>(
   {
-    username: { type: String, required: true },
+    userId: { type: String, required: true },
   },
   { timestamps: true }
 );
@@ -79,3 +79,7 @@ userSchema.set("toObject", {
 
 export const User: Model<IUser> = mongoose.model<IUser>("User", userSchema);
 export const Task: Model<ITask> = mongoose.model<ITask>("Task", taskSchema);
+export const Member: Model<IMember> = mongoose.model<IMember>(
+  "Member",
+  memberSchema
+);

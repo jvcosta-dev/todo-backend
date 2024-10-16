@@ -2,7 +2,7 @@ import { Date, Document, ObjectId } from "mongoose";
 import { ITask } from "./task.interface";
 
 export interface IMember extends Document {
-  username: string;
+  userId: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
