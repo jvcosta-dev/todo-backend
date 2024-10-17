@@ -1,20 +1,12 @@
-import { Task, User } from "../models/user.model";
 import { Request, Response } from "express";
 import { validateTaskInput } from "../validations/task.validation";
 import { doesUserExist } from "../validations/user.validation";
 import { isValidObjectId } from "mongoose";
-import { IUser } from "../interfaces/user.interface";
 import { sendErrorResponse } from "../helpers/http";
-
-const hasPermission = (user: IUser, reqUserId: string, userId: string) => {
-  const isOwner = reqUserId === userId;
-  const hasAccess = user.workspace.members.find((m) => m.userId === reqUserId);
-  return isOwner || hasAccess;
-};
+import { ITask } from "../interfaces/task.interface";
 
 const createTask = async (req: Request, res: Response) => {
   const { title, description, tag, initialDate, endDate } = req.body;
-  const { userId } = req.params;
 
   const user = await doesUserExist(req.userId);
   if (!user) return sendErrorResponse(res, 404, "User not found");
@@ -29,11 +21,8 @@ const createTask = async (req: Request, res: Response) => {
   if (errors.length > 0) return sendErrorResponse(res, 400, errors.join(", "));
 
   try {
-    if (!hasPermission(user, req.userId, userId))
-      return sendErrorResponse(res, 401, "Unauthorized");
-
-    const newTask = new Task({ title, description, tag, initialDate, endDate });
-    user.workspace?.tasks.push(newTask);
+    const newTask = { title, description, tag, initialDate, endDate };
+    user.tasks.push(newTask as ITask);
     await user.save();
 
     res.status(201).json(newTask);
@@ -44,19 +33,16 @@ const createTask = async (req: Request, res: Response) => {
 };
 
 const getTaskById = async (req: Request, res: Response) => {
-  const { userId, taskId } = req.params;
+  const { taskId } = req.params;
 
-  if (!isValidObjectId(taskId) || !isValidObjectId(userId))
+  if (!isValidObjectId(taskId))
     return sendErrorResponse(res, 400, "Invalid ID");
 
-  const user = await doesUserExist(userId);
+  const user = await doesUserExist(req.userId);
   if (!user) return sendErrorResponse(res, 404, "User not found");
 
   try {
-    if (!hasPermission(user, req.userId, userId))
-      return sendErrorResponse(res, 401, "Unauthorized");
-
-    const task = user.workspace?.tasks.find((t) => t._id.toString() === taskId);
+    const task = user.tasks.find((t) => t._id.toString() === taskId);
     if (!task) return sendErrorResponse(res, 404, "Task not found");
 
     res.status(200).json(task);
@@ -71,7 +57,7 @@ const getUserTasks = async (req: Request, res: Response) => {
     const user = await doesUserExist(req.userId);
     if (!user) return sendErrorResponse(res, 404, "User not found");
 
-    const tasks = user.workspace?.tasks;
+    const tasks = user.tasks;
     res.status(200).json(tasks);
   } catch (error) {
     console.error(error);
@@ -90,10 +76,7 @@ const editTask = async (req: Request, res: Response) => {
   if (!user) return sendErrorResponse(res, 404, "User not found");
 
   try {
-    if (!hasPermission(user, req.userId, userId))
-      return sendErrorResponse(res, 401, "Unauthorized");
-
-    const task = user.workspace?.tasks.find((t) => t._id.toString() === taskId);
+    const task = user.tasks.find((t) => t._id.toString() === taskId);
     if (!task) return sendErrorResponse(res, 404, "Task not found");
 
     if (!title && !description && !tag && !initialDate && !endDate) {

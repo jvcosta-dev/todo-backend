@@ -1,4 +1,4 @@
-import { Member, Task, User } from "../models/user.model";
+import { User } from "../models/user.model";
 import { Request, Response } from "express";
 import { validateUserInput } from "../validations/user.validation";
 import { createToken, setTokenCookie } from "../middlewares/auth.middleware";
@@ -61,73 +61,4 @@ const loginUser = async (req: Request, res: Response) => {
   }
 };
 
-const joinWorkspace = async (req: Request, res: Response) => {
-  const { userId } = req.params;
-  if (!userId || !isValidObjectId) {
-    res.sendStatus(400);
-    return;
-  }
-  try {
-    const owner = await User.findById(userId);
-    if (!owner) {
-      res.sendStatus(404);
-      return;
-    }
-    if (owner.id === req.userId) {
-      res.sendStatus(400);
-      return;
-    }
-    const isMember = owner.workspace.members.find(
-      (m) => m.userId === req.userId
-    );
-    if (isMember) {
-      res.sendStatus(409);
-      return;
-    }
-    const newMember = new Member({
-      userId: req.userId,
-    });
-    owner.workspace.members.push(newMember);
-    await owner.save();
-    res.sendStatus(201);
-  } catch (error) {
-    res.sendStatus(500);
-    console.error(error);
-  }
-};
-
-const leaveWorkspace = async (req: Request, res: Response) => {
-  const { userId } = req.params;
-  if (!userId || !isValidObjectId(userId)) {
-    res.sendStatus(400);
-    return;
-  }
-  try {
-    const owner = await User.findById(userId);
-    if (!owner) {
-      res.sendStatus(404);
-      return;
-    }
-    if (owner.id === req.userId) {
-      res.sendStatus(400);
-      return;
-    }
-    const isMember = owner.workspace.members.find(
-      (m) => m.userId === req.userId
-    );
-    if (!isMember) {
-      res.sendStatus(409);
-      return;
-    }
-    owner.workspace.members = owner.workspace.members.filter(
-      (m) => m.userId !== req.userId
-    );
-    await owner.save();
-    res.sendStatus(200);
-  } catch (error) {
-    res.sendStatus(500);
-    console.error(error);
-  }
-};
-
-export { getUsers, createUser, loginUser, joinWorkspace, leaveWorkspace };
+export { getUsers, createUser, loginUser };

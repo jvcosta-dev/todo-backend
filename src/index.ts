@@ -1,14 +1,8 @@
-import e, { Request, Response } from "express";
+import e from "express";
 import cookieparser from "cookie-parser";
 import cors from "cors";
 import mongoose from "mongoose";
-import {
-  createUser,
-  getUsers,
-  joinWorkspace,
-  leaveWorkspace,
-  loginUser,
-} from "./controllers/user.controller";
+import { createUser, getUsers, loginUser } from "./controllers/user.controller";
 import {
   createTask,
   editTask,
@@ -16,7 +10,6 @@ import {
   getUserTasks,
 } from "./controllers/task.controller";
 import { authMiddleware } from "./middlewares/auth.middleware";
-import { getContent } from "./controllers/content.controller";
 
 const MONGO_URI = process.env.MONGO_URI || "";
 const PORT = process.env.PORT || "";
@@ -33,8 +26,6 @@ app.use(
 
 const router = e.Router();
 
-router.get("/content", getContent);
-
 router.get("/users", authMiddleware, getUsers);
 router.post("/register", createUser);
 router.post("/login", loginUser);
@@ -43,9 +34,6 @@ router.post("/task", authMiddleware, createTask);
 router.get("/task/:userId/:taskId", authMiddleware, getTaskById);
 router.patch("/task/:userId/:taskId", authMiddleware, editTask);
 router.get("/task/mytasks", authMiddleware, getUserTasks);
-
-router.put("/workspace/join/:userId", authMiddleware, joinWorkspace);
-router.patch("/workspace/leave/:userId", authMiddleware, leaveWorkspace);
 
 app.use(router);
 

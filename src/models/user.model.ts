@@ -1,6 +1,6 @@
 import mongoose, { Model, mongo } from "mongoose";
 import bcrypt from "bcrypt";
-import { IMember, IUser, IWorkspace } from "../interfaces/user.interface";
+import { IUser } from "../interfaces/user.interface";
 import { ITask } from "../interfaces/task.interface";
 
 const taskSchema = new mongoose.Schema<ITask>(
@@ -19,28 +19,13 @@ const taskSchema = new mongoose.Schema<ITask>(
   { timestamps: true }
 );
 
-const memberSchema = new mongoose.Schema<IMember>(
-  {
-    userId: { type: String, required: true },
-  },
-  { timestamps: true }
-);
-
-const workspaceSchema = new mongoose.Schema<IWorkspace>({
-  tasks: { type: [taskSchema], default: [] },
-  members: { type: [memberSchema], default: [] },
-});
-
 const userSchema = new mongoose.Schema<IUser>(
   {
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     imageUrl: { type: String },
-    workspace: {
-      type: workspaceSchema,
-      default: () => ({ tasks: [], members: [] }),
-    },
+    tasks: { type: [taskSchema], default: [] },
   },
   { timestamps: true }
 );
@@ -78,8 +63,3 @@ userSchema.set("toObject", {
 });
 
 export const User: Model<IUser> = mongoose.model<IUser>("User", userSchema);
-export const Task: Model<ITask> = mongoose.model<ITask>("Task", taskSchema);
-export const Member: Model<IMember> = mongoose.model<IMember>(
-  "Member",
-  memberSchema
-);
