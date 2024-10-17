@@ -1,4 +1,4 @@
-import e from "express";
+import e, { Request, Response } from "express";
 import cookieparser from "cookie-parser";
 import cors from "cors";
 import mongoose from "mongoose";
@@ -16,6 +16,8 @@ import {
   getUserTasks,
 } from "./controllers/task.controller";
 import { authMiddleware } from "./middlewares/auth.middleware";
+import { getContent } from "./controllers/content.controller";
+
 const MONGO_URI = process.env.MONGO_URI || "";
 const PORT = process.env.PORT || "";
 
@@ -30,6 +32,8 @@ app.use(
 );
 
 const router = e.Router();
+
+router.get("/content", getContent);
 
 router.get("/users", authMiddleware, getUsers);
 router.post("/register", createUser);
