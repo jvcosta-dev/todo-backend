@@ -19,7 +19,7 @@ app.use(e.json());
 app.use(cookieparser());
 app.use(
   cors({
-    origin: ["localhost", "*"],
+    origin: ["http://localhost:5173"],
     credentials: true,
   })
 );
