@@ -2,13 +2,7 @@ import e from "express";
 import cookieparser from "cookie-parser";
 import cors from "cors";
 import mongoose from "mongoose";
-import {
-  createUser,
-  getUsers,
-  joinWorkspace,
-  leaveWorkspace,
-  loginUser,
-} from "./controllers/user.controller";
+import { createUser, getUsers, loginUser } from "./controllers/user.controller";
 import {
   createTask,
   editTask,
@@ -16,6 +10,7 @@ import {
   getUserTasks,
 } from "./controllers/task.controller";
 import { authMiddleware } from "./middlewares/auth.middleware";
+
 const MONGO_URI = process.env.MONGO_URI || "";
 const PORT = process.env.PORT || "";
 
@@ -24,7 +19,7 @@ app.use(e.json());
 app.use(cookieparser());
 app.use(
   cors({
-    origin: ["localhost", "*"],
+    origin: ["http://localhost:5173"],
     credentials: true,
   })
 );
@@ -39,9 +34,6 @@ router.post("/task", authMiddleware, createTask);
 router.get("/task/:userId/:taskId", authMiddleware, getTaskById);
 router.patch("/task/:userId/:taskId", authMiddleware, editTask);
 router.get("/task/mytasks", authMiddleware, getUserTasks);
-
-router.put("/workspace/join/:userId", authMiddleware, joinWorkspace);
-router.patch("/workspace/leave/:userId", authMiddleware, leaveWorkspace);
 
 app.use(router);
 
