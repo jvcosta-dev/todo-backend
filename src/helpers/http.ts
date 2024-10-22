@@ -5,5 +5,5 @@ export const sendErrorResponse = (
   statusCode: number,
   message?: string
 ) => {
-  res.status(statusCode).end(message);
+  res.status(statusCode).json({ message });
 };
