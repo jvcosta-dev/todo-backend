@@ -45,7 +45,7 @@ const getTaskById = async (req: Request, res: Response) => {
   try {
     const task = user.tasks.find((t) => t._id.toString() === taskId);
     if (!task) return sendErrorResponse(res, 404, "Task not found");
-    if (isExpiredDate(task.endDate) && task.status === 0) {
+    if (isExpiredDate(task.endDate.toString()) && task.status === 0) {
       task.status = 2;
       await user.save();
     }
@@ -63,7 +63,7 @@ const getUserTasks = async (req: Request, res: Response) => {
 
     const tasks = user.tasks;
     tasks.map((t) => {
-      if (isExpiredDate(t.endDate) && t.status === 0) t.status = 2;
+      if (isExpiredDate(t.endDate.toString()) && t.status !== 1) t.status = 2;
     });
     await user.save();
     res.status(200).json(tasks);
@@ -123,7 +123,7 @@ const chechTask = async (req: Request, res: Response) => {
       return;
     }
     if (task.status === 1) {
-      if (isExpiredDate(task.endDate)) {
+      if (isExpiredDate(task.endDate.toString())) {
         task.status = 2;
       } else {
         task.status = 0;
