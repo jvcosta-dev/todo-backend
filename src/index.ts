@@ -4,7 +4,9 @@ import cors from "cors";
 import mongoose from "mongoose";
 import { createUser, getUsers, loginUser } from "./controllers/user.controller";
 import {
+  chechTask,
   createTask,
+  deleteTask,
   editTask,
   getTaskById,
   getUserTasks,
@@ -31,9 +33,11 @@ router.post("/register", createUser);
 router.post("/login", loginUser);
 
 router.post("/task", authMiddleware, createTask);
-router.get("/task/:userId/:taskId", authMiddleware, getTaskById);
-router.patch("/task/:userId/:taskId", authMiddleware, editTask);
-router.get("/task/mytasks", authMiddleware, getUserTasks);
+router.get("/mytasks", authMiddleware, getUserTasks);
+router.get("/task/:taskId", authMiddleware, getTaskById);
+router.patch("/task/:taskId", authMiddleware, editTask);
+router.delete("/task/:taskId", authMiddleware, deleteTask);
+router.patch("/check/:taskId", authMiddleware, chechTask);
 
 app.use(router);
 
