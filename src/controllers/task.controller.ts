@@ -75,12 +75,12 @@ const getUserTasks = async (req: Request, res: Response) => {
 
 const editTask = async (req: Request, res: Response) => {
   const { title, description, tag, initialDate, endDate } = req.body;
-  const { userId, taskId } = req.params;
+  const { taskId } = req.params;
 
-  if (!isValidObjectId(taskId) || !isValidObjectId(userId))
+  if (!isValidObjectId(taskId))
     return sendErrorResponse(res, 400, "Invalid ID");
 
-  const user = await doesUserExist(userId);
+  const user = await doesUserExist(req.userId);
   if (!user) return sendErrorResponse(res, 404, "User not found");
 
   try {
