@@ -41,6 +41,7 @@ const createUser = async (req: Request, res: Response): Promise<void> => {
         id: newUser.id,
         name: newUser.name,
         email: newUser.email,
+        imageUrl: newUser.imageUrl,
       },
     });
   } catch (error) {
@@ -73,6 +74,7 @@ const loginUser = async (req: Request, res: Response) => {
         id: user.id,
         name: user.name,
         email: user.email,
+        imageUrl: user.imageUrl,
       },
     });
   } catch (error) {
@@ -154,4 +156,17 @@ const getDashboard = async (req: Request, res: Response) => {
   }
 };
 
-export { getUsers, createUser, loginUser, getDashboard };
+const deleteUser = async (req: Request, res: Response) => {
+  try {
+    const user = await User.findByIdAndDelete(req.userId);
+    if (!user) {
+      return sendErrorResponse(res, 400, "User not found");
+    }
+    res.status(204).end();
+  } catch (error) {
+    sendErrorResponse(res, 500, "Internal server error");
+    console.error(error);
+  }
+};
+
+export { getUsers, createUser, loginUser, getDashboard, deleteUser };

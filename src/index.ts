@@ -4,6 +4,7 @@ import cors from "cors";
 import mongoose from "mongoose";
 import {
   createUser,
+  deleteUser,
   getDashboard,
   getUsers,
   loginUser,
@@ -33,7 +34,8 @@ app.use(
 
 const router = e.Router();
 
-router.get("/users", authMiddleware, getUsers);
+//router.get("/users", authMiddleware, getUsers);
+router.delete("/user", authMiddleware, deleteUser);
 router.post("/register", createUser);
 router.post("/login", loginUser);
 

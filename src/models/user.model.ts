@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema<IUser>(
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    imageUrl: { type: String },
+    imageUrl: { type: String, default: "default.webp" },
     tasks: { type: [taskSchema], default: [] },
   },
   { timestamps: true }
