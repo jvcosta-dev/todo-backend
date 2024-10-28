@@ -2,7 +2,12 @@ import e from "express";
 import cookieparser from "cookie-parser";
 import cors from "cors";
 import mongoose from "mongoose";
-import { createUser, getUsers, loginUser } from "./controllers/user.controller";
+import {
+  createUser,
+  getDashboard,
+  getUsers,
+  loginUser,
+} from "./controllers/user.controller";
 import {
   chechTask,
   createTask,
@@ -31,6 +36,8 @@ const router = e.Router();
 router.get("/users", authMiddleware, getUsers);
 router.post("/register", createUser);
 router.post("/login", loginUser);
+
+router.get("/dashboard", authMiddleware, getDashboard);
 
 router.post("/task", authMiddleware, createTask);
 router.get("/mytasks", authMiddleware, getUserTasks);
