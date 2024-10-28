@@ -28,6 +28,10 @@ const createUser = async (req: Request, res: Response): Promise<void> => {
   }
 
   try {
+    const user = await User.find({ email });
+    if (user) {
+      sendErrorResponse(res, 404, "Email already in use");
+    }
     const newUser = new User({ name, email, password });
     await newUser.save();
     const token = createToken(newUser._id.toString());

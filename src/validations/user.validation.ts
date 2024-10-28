@@ -26,8 +26,6 @@ export const validateUserInput = async (userData: IUserInput) => {
 
   if (!isValidEmail(userData.email)) {
     errors.push("Invalid email format.");
-  } else if (await doesEmailExist(userData.email)) {
-    errors.push("Email is already in use.");
   }
 
   if (!isValidString(userData.password, 8)) {
