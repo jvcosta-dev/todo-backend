@@ -28,9 +28,9 @@ const createUser = async (req: Request, res: Response): Promise<void> => {
   }
 
   try {
-    const user = await User.find({ email });
+    const user = await User.findOne({ email: email });
     if (user) {
-      sendErrorResponse(res, 404, "Email already in use");
+      return sendErrorResponse(res, 404, "Email already in use");
     }
     const newUser = new User({ name, email, password });
     await newUser.save();
