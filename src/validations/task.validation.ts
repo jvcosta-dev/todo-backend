@@ -18,8 +18,8 @@ export const validateTaskInput = (taskData: ITaskInput) => {
   if (!isValidString(taskData.title, 3)) {
     errors.push("Title must be at least 3 caracters long");
   }
-  if (!isValidString(taskData.description, 5)) {
-    errors.push("Description must be at least 5 caracters long");
+  if (!isValidString(taskData.description, 3)) {
+    errors.push("Description must be at least 3 caracters long");
   }
   if (!isValidString(taskData.tag, 3)) {
     errors.push("Tag must be at least 3 caracters long");
