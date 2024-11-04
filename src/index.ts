@@ -21,13 +21,14 @@ import { authMiddleware } from "./middlewares/auth.middleware";
 
 const MONGO_URI = process.env.MONGO_URI || "";
 const PORT = process.env.PORT || "";
+const ORIGIN = process.env.ORIGIN || "";
 
 const app = e();
 app.use(e.json());
 app.use(cookieparser());
 app.use(
   cors({
-    origin: ["https://jvcosta-dev-task-track.vercel.app/"],
+    origin: [ORIGIN],
     credentials: true,
   })
 );
