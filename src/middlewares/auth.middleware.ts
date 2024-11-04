@@ -32,6 +32,7 @@ const setTokenCookie = (res: Response, token: string) => {
   res.cookie("auth", token, {
     httpOnly: true,
     secure: process.env.ENV === "production",
+    sameSite: "none",
     maxAge: 3600000 * 24 * 7,
   });
 };
