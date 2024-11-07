@@ -56,6 +56,7 @@ npm run build
 ### User Login
 
 Login an user
+Returns an auth cookie (httpOnly, secure, 7 days expire date)
 
 - **Request**: `POST`
 - **Endpoint**: `login`
@@ -72,13 +73,12 @@ Login an user
     "imageUrl": "default.webp"
   }
 }
-cookie (secure, httpOnly)
-  auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzJkMWJhOGE5YzczZmQyODVmOGFhOTMiLCJpYXQiOjE3MzEwMDk0NTIsImV4cCI6MTczMTYxNDI1Mn0.r9ynJa-niek7nuEu6Om2GDctu_YQO4GDXXc3K0nXr0k
 ```
 
 ### User Register
 
 Insert an user instance to database
+Returns an auth cookie (httpOnly, secure, 7 days expire date)
 
 - **Request**: `POST`
 - **Endpoint**: `register`
