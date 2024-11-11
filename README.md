@@ -202,9 +202,9 @@ Insert a new task in user instance
 
 ```json
 {
-  "title": "second task",
-  "description": "an bigger description task as example to test",
-  "tag": "god",
+  "title": "task example",
+  "description": "lorem description",
+  "tag": "testing",
   "initialDate": "2024-10-23T12:00:00Z",
   "endDate": "2024-10-23T13:00:00Z"
 }
